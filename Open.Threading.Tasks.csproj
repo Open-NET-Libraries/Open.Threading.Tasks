@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>electricessence</Authors>
+    <Company>electricessence</Company>
+    <Description>A set of utilities and extensions for working with Tasks.
+
+Part of the "Open" set of libraries.</Description>
+    <Copyright>https://github.com/electricessence/Open.Threading.Tasks/blob/master/LISCENSE.md</Copyright>
+    <PackageProjectUrl>https://github.com/electricessence/Open.Threading.Tasks/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/electricessence/Open.Threading.Tasks/</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/electricessence/Open.Threading.Tasks/blob/master/LISCENSE.md</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>dotnet, dotnet-core, dotnetcore, cs, extensions, actionrunner, cancellable, cancellabletask, progress, task-extensions</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove=".git" />
+    <None Remove=".gitignore" />
+    <None Remove="LICENSE" />
+    <None Remove="README.md" />
+  </ItemGroup>
+
+</Project>

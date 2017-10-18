@@ -71,12 +71,8 @@ namespace Open.Threading.Tasks
 		public bool Cancel(bool onlyIfNotRunning)
 		{
 			var t = _task;
-			if (t?.Cancel(onlyIfNotRunning) ?? false)
-			{
-				Interlocked.CompareExchange(ref _task, null, t);
-				return true;
-			}
-			return false;
+			return t?.Cancel(onlyIfNotRunning) ?? false
+				&& t == Interlocked.CompareExchange(ref _task, null, t);
 		}
 
 		public bool Cancel()
@@ -150,10 +146,10 @@ namespace Open.Threading.Tasks
 			}
 
 			CancellableTask task = null;
-			if((task = _task) == null)
+			if ((task = _task) == null)
 			{
 				task = Prepare();
-				if(task==Interlocked.CompareExchange(ref _task, task, null))
+				if (task == Interlocked.CompareExchange(ref _task, task, null))
 				{
 					task.Start(delay);
 				}

@@ -149,7 +149,7 @@ namespace Open.Threading.Tasks
 			if ((task = _task) == null)
 			{
 				task = Prepare();
-				if (task == Interlocked.CompareExchange(ref _task, task, null))
+				if (null == Interlocked.CompareExchange(ref _task, task, null))
 				{
 					task.Start(delay);
 				}

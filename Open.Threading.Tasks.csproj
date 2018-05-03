@@ -14,10 +14,10 @@ Part of the "Open" set of libraries.</Description>
     <PackageLicenseUrl>https://github.com/electricessence/Open.Threading.Tasks/blob/master/LISCENSE.md</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>dotnet, dotnet-core, dotnetcore, cs, extensions, actionrunner, cancellable, cancellabletask, progress, task-extensions</PackageTags>
-    <Version>1.1.0</Version>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <PackageReleaseNotes>Updated to .NET Standard for compatability.</PackageReleaseNotes>
+    <Version>1.1.2</Version>
+    <AssemblyVersion>1.1.2.0</AssemblyVersion>
+    <FileVersion>1.1.2.0</FileVersion>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

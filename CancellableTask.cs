@@ -32,13 +32,14 @@ namespace Open.Threading.Tasks
 
 		protected static void Blank() { }
 
-		public void Dispose()
+		protected override void Dispose(bool disposing)
 		{
 			Cancel();
+			base.Dispose(disposing);
 		}
 
 		protected CancellableTask(Action action, CancellationToken token)
-			: base(action ?? Blank)
+			: base(action ?? Blank, token)
 		{
 		}
 
@@ -121,6 +122,18 @@ namespace Open.Threading.Tasks
 		public static CancellableTask StartNew(Action action, TimeSpan? delay = null, TaskScheduler scheduler = null)
 		{
 			return StartNew(delay ?? TimeSpan.Zero, action, scheduler);
+		}
+
+		public static CancellableTask StartNew(Action<CancellationToken> action, TimeSpan? delay = null, TaskScheduler scheduler = null)
+		{
+			var ts = new CancellationTokenSource();
+			var token = ts.Token;
+			var task = new CancellableTask(()=>action(token), token)
+			{
+				TokenSource = ts
+			};
+			task.Start(delay ?? TimeSpan.Zero, scheduler);
+			return task;
 		}
 	}
 	

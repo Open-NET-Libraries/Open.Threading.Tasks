@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace Open.Threading.Tasks
@@ -21,10 +21,10 @@ namespace Open.Threading.Tasks
 				case TaskStatus.WaitingForChildrenToComplete:
 				case TaskStatus.WaitingToRun:
 					return true;
-				//case TaskStatus.Canceled:
-				//case TaskStatus.Faulted:
-				//case TaskStatus.RanToCompletion:
-				//	return false;
+					//case TaskStatus.Canceled:
+					//case TaskStatus.Faulted:
+					//case TaskStatus.RanToCompletion:
+					//	return false;
 			}
 
 			return false;
@@ -37,9 +37,9 @@ namespace Open.Threading.Tasks
 		/// <returns>True if start attempt was successful.</returns>
 		public static bool EnsureStarted(this Task target, TaskScheduler scheduler = null)
 		{
-			if(target==null) throw new NullReferenceException();
+			if (target == null) throw new NullReferenceException();
 
-			if(target.Status==TaskStatus.Created)
+			if (target.Status == TaskStatus.Created)
 			{
 				try
 				{
@@ -50,7 +50,7 @@ namespace Open.Threading.Tasks
 
 					return true;
 				}
-				catch(InvalidOperationException)
+				catch (InvalidOperationException)
 				{
 					// Even though we've checked the status, it's possible it could have been started.  We can't guarantee proper handling without a trap here.
 					if (target.Status == TaskStatus.Created)
@@ -100,7 +100,7 @@ namespace Open.Threading.Tasks
 		/// <typeparam name="TTask">The return type is the same as the target.</typeparam>
 		/// <param name="action">The action to perform if fullfulled.</param>
 		/// <returns>The target object.  Allows for method chaining.</returns>
-		public static TTask OnFullfilled<TTask,T>(this TTask target, Func<T> action)
+		public static TTask OnFullfilled<TTask, T>(this TTask target, Func<T> action)
 			where TTask : Task
 		{
 			target.ContinueWith(task =>

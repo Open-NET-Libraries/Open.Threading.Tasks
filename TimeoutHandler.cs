@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Open.Threading.Tasks
 {
-    public class TimeoutHandler : IDisposable
+	public class TimeoutHandler : IDisposable
 	{
 
 		CancellationTokenSource TokenSource;

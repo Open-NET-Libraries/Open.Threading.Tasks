@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Open.Threading;
 
 namespace Open.Threading.Tasks
 {
@@ -71,7 +70,7 @@ namespace Open.Threading.Tasks
 		public bool Cancel(bool onlyIfNotRunning)
 		{
 			var t = _task;
-			return t!=null
+			return t != null
 				&& t == Interlocked.CompareExchange(ref _task, null, t)
 				&& t.Cancel(onlyIfNotRunning);
 		}

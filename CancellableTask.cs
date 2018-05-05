@@ -128,7 +128,7 @@ namespace Open.Threading.Tasks
 		{
 			var ts = new CancellationTokenSource();
 			var token = ts.Token;
-			var task = new CancellableTask(()=>action(token), token)
+			var task = new CancellableTask(() => action(token), token)
 			{
 				TokenSource = ts
 			};
@@ -136,5 +136,5 @@ namespace Open.Threading.Tasks
 			return task;
 		}
 	}
-	
+
 }

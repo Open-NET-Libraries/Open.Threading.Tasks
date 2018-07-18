@@ -6,8 +6,7 @@ namespace Open.Threading.Tasks
 {
 	public class TimeoutHandler : IDisposable
 	{
-
-		CancellationTokenSource TokenSource;
+		readonly CancellationTokenSource TokenSource;
 		TimeoutHandler(int delay, Action<int> onComplete)
 		{
 			TokenSource = new CancellationTokenSource();

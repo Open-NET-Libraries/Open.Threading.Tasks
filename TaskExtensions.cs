@@ -33,29 +33,28 @@ namespace Open.Threading.Tasks
 		/// <summary>
 		/// Checks the status of the task and attempts to start it if waiting to start (TaskStatus.Created).
 		/// </summary>
+		/// <param name="target">The task to ensure start.</param>
 		/// <param name="scheduler">Optional scheduler to use.</param>
 		/// <returns>True if start attempt was successful.</returns>
 		public static bool EnsureStarted(this Task target, TaskScheduler scheduler = null)
 		{
 			if (target == null) throw new NullReferenceException();
 
-			if (target.Status == TaskStatus.Created)
+			if (target.Status != TaskStatus.Created) return false;
+			try
 			{
-				try
-				{
-					if (scheduler == null)
-						target.Start();
-					else
-						target.Start(scheduler);
+				if (scheduler == null)
+					target.Start();
+				else
+					target.Start(scheduler);
 
-					return true;
-				}
-				catch (InvalidOperationException)
-				{
-					// Even though we've checked the status, it's possible it could have been started.  We can't guarantee proper handling without a trap here.
-					if (target.Status == TaskStatus.Created)
-						throw; // Something wierd must have happened if we arrived here.
-				}
+				return true;
+			}
+			catch (InvalidOperationException)
+			{
+				// Even though we've checked the status, it's possible it could have been started.  We can't guarantee proper handling without a trap here.
+				if (target.Status == TaskStatus.Created)
+					throw; // Something wierd must have happened if we arrived here.
 			}
 
 			return false;
@@ -65,6 +64,7 @@ namespace Open.Threading.Tasks
 		/// Utility method that can be chained with other methods for reacting to Task results.  Only invokes the action if completed and not cancelled.
 		/// </summary>
 		/// <typeparam name="TTask">The return type is the same as the target.</typeparam>
+		/// <param name="target">The task.</param>
 		/// <param name="action">The action to perform if fullfulled.</param>
 		/// <returns>The target object.  Allows for method chaining.</returns>
 		public static TTask OnFullfilled<TTask>(this TTask target, Action action)
@@ -81,7 +81,8 @@ namespace Open.Threading.Tasks
 		/// <summary>
 		/// Utility method that can be chained with other methods for reacting to Task results.  Only invokes the action if completed and not cancelled.
 		/// </summary>
-		/// <typeparam name="TTask">The return type is the same as the target.</typeparam>
+		/// <typeparam name="T">The return type is the same as the target.</typeparam>
+		/// <param name="target">The task.</param>
 		/// <param name="action">The action to perform if fullfulled.</param>
 		/// <returns>The target object.  Allows for method chaining.</returns>
 		public static Task<T> OnFullfilled<T>(this Task<T> target, Action<T> action)
@@ -97,7 +98,9 @@ namespace Open.Threading.Tasks
 		/// <summary>
 		/// Utility method that can be chained with other methods for reacting to Task results.  Only invokes the action if completed and not cancelled.
 		/// </summary>
-		/// <typeparam name="TTask">The return type is the same as the target.</typeparam>
+		/// <typeparam name="TTask">The task type.</typeparam>
+		/// <typeparam name="T">The return type of the task.</typeparam>
+		/// <param name="target">The task.</param>
 		/// <param name="action">The action to perform if fullfulled.</param>
 		/// <returns>The target object.  Allows for method chaining.</returns>
 		public static TTask OnFullfilled<TTask, T>(this TTask target, Func<T> action)
@@ -115,6 +118,7 @@ namespace Open.Threading.Tasks
 		/// Utility method that can be chained with other methods for reacting to Task results. Only invokes the action if faulted.
 		/// </summary>
 		/// <typeparam name="TTask">The return type is the same as the target.</typeparam>
+		/// <param name="target">The task.</param>
 		/// <param name="action">The action to perform if faulted.</param>
 		/// <returns>The target object.  Allows for method chaining.</returns>
 		public static TTask OnFaulted<TTask>(this TTask target, Action<Exception> action)
@@ -133,6 +137,7 @@ namespace Open.Threading.Tasks
 		/// Utility method that can be chained with other methods for reacting to Task results.  Only invokes the action if cancelled.
 		/// </summary>
 		/// <typeparam name="TTask">The return type is the same as the target.</typeparam>
+		/// <param name="target">The task.</param>
 		/// <param name="action">The action to perform if cancelled.</param>
 		/// <returns>The target object.  Allows for method chaining.</returns>
 		public static TTask OnCancelled<TTask>(this TTask target, Action action)
@@ -149,7 +154,9 @@ namespace Open.Threading.Tasks
 		/// <summary>
 		/// Utility method that can be chained with other methods for reacting to Task results.  Only invokes the action if cancelled.
 		/// </summary>
-		/// <typeparam name="TTask">The return type is the same as the target.</typeparam>
+		/// <typeparam name="TTask">The task type.</typeparam>
+		/// <typeparam name="T">The return type of the task.</typeparam>
+		/// <param name="target">The task.</param>
 		/// <param name="action">The action to perform if cancelled.</param>
 		/// <returns>The target object.  Allows for method chaining.</returns>
 		public static TTask OnCancelled<TTask, T>(this TTask target, Func<T> action)

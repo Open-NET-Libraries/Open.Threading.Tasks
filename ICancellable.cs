@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Open.Threading.Tasks
 {
+	[SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
 	public interface ICancellable : IDisposable
 	{
 		/// <summary>

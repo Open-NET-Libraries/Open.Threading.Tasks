@@ -25,13 +25,11 @@ namespace Open.Threading.Tasks
 		}
 
 		Action _action;
+		// ReSharper disable once NotAccessedField.Global
 		protected TaskScheduler _scheduler;
 
 		protected int _count;
-		public int Count
-		{
-			get { return _count; }
-		}
+		public int Count => _count;
 
 		public DateTime LastStart
 		{
@@ -39,13 +37,7 @@ namespace Open.Threading.Tasks
 			protected set;
 		}
 
-		public bool HasBeenRun
-		{
-			get
-			{
-				return LastStart < DateTime.Now;
-			}
-		}
+		public bool HasBeenRun => LastStart < DateTime.Now;
 
 		public DateTime LastComplete
 		{
@@ -53,19 +45,7 @@ namespace Open.Threading.Tasks
 			protected set;
 		}
 
-		public bool HasCompleted
-		{
-			get
-			{
-				return LastComplete < DateTime.Now;
-			}
-		}
-
-		public Exception LastFault
-		{
-			get;
-			protected set;
-		}
+		public bool HasCompleted => LastComplete < DateTime.Now;
 
 		public bool Cancel(bool onlyIfNotRunning)
 		{
@@ -84,6 +64,7 @@ namespace Open.Threading.Tasks
 		{
 			Cancel();
 			_action = null;
+			_scheduler = null;
 		}
 
 		Action GetAction()
@@ -94,13 +75,7 @@ namespace Open.Threading.Tasks
 			return a;
 		}
 
-		public bool IsScheduled
-		{
-			get
-			{
-				return _task?.IsActive() ?? false;
-			}
-		}
+		public bool IsScheduled => _task?.IsActive() ?? false;
 
 		/// <summary>
 		/// Indiscriminately invokes the action.
@@ -110,6 +85,7 @@ namespace Open.Threading.Tasks
 			GetAction().Invoke();
 		}
 
+		// ReSharper disable once UnusedMember.Local
 		readonly object _taskLock = new object();
 		CancellableTask _task;
 		CancellableTask Prepare()
@@ -119,7 +95,6 @@ namespace Open.Threading.Tasks
 			task
 				.OnFaulted(ex =>
 				{
-					LastFault = ex;
 				})
 				.OnFullfilled(() =>
 				{
@@ -145,14 +120,12 @@ namespace Open.Threading.Tasks
 				Cancel(true); // Don't cancel defered if already running.
 			}
 
-			CancellableTask task = null;
-			if ((task = _task) == null)
+			CancellableTask task;
+			if ((task = _task) != null) return task;
+			task = Prepare();
+			if (null == Interlocked.CompareExchange(ref _task, task, null))
 			{
-				task = Prepare();
-				if (null == Interlocked.CompareExchange(ref _task, task, null))
-				{
-					task.Start(delay);
-				}
+				task.Start(delay);
 			}
 			return task;
 		}

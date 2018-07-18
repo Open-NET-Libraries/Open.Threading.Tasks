@@ -84,7 +84,7 @@ namespace Open.Threading.Tasks
 			}
 			else
 			{
-				int runState = 0;
+				var runState = 0;
 
 				ContinueWith(t =>
 				{

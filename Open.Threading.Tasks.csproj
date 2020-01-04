@@ -11,12 +11,10 @@ Part of the "Open" set of libraries.</Description>
     <Copyright>https://github.com/electricessence/Open.Threading.Tasks/blob/master/LISCENSE.md</Copyright>
     <PackageProjectUrl>https://github.com/electricessence/Open.Threading.Tasks/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/electricessence/Open.Threading.Tasks/</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/electricessence/Open.Threading.Tasks/blob/master/LISCENSE.md</PackageLicenseUrl>
-    <RepositoryType>git</RepositoryType>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryType>git</RepositoryType>
     <PackageTags>dotnet, dotnet-core, dotnetcore, cs, extensions, actionrunner, cancellable, cancellabletask, progress, task-extensions</PackageTags>
     <Version>1.1.3</Version>
-    <AssemblyVersion>1.1.2.0</AssemblyVersion>
-    <FileVersion>1.1.2.0</FileVersion>
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 

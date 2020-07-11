@@ -6,7 +6,7 @@ namespace Open.Threading.Tasks
 {
 	public class ActionRunner : ICancellable
 	{
-		public ActionRunner(Action action, TaskScheduler scheduler = null)
+		public ActionRunner(Action action, TaskScheduler? scheduler = default)
 		{
 			_action = action;
 			_scheduler = scheduler; // No need to hold a refernce to the default, just keep it null.
@@ -14,19 +14,15 @@ namespace Open.Threading.Tasks
 			LastComplete = DateTime.MaxValue;
 		}
 
-		public static ActionRunner Create(Action action, TaskScheduler scheduler = null)
-		{
-			return new ActionRunner(action, scheduler);
-		}
+		public static ActionRunner Create(Action action, TaskScheduler? scheduler = default)
+			=> new ActionRunner(action, scheduler);
 
-		public static ActionRunner Create<T>(Func<T> action, TaskScheduler scheduler = null)
-		{
-			return new ActionRunner(() => { action(); }, scheduler);
-		}
+		public static ActionRunner Create<T>(Func<T> action, TaskScheduler? scheduler = default)
+			=> new ActionRunner(() => { action(); }, scheduler);
 
-		Action _action;
+		Action? _action;
 		// ReSharper disable once NotAccessedField.Global
-		protected TaskScheduler _scheduler;
+		protected TaskScheduler? _scheduler;
 
 		protected int _count;
 		public int Count => _count;
@@ -70,7 +66,7 @@ namespace Open.Threading.Tasks
 		Action GetAction()
 		{
 			var a = _action;
-			if (a == null)
+			if (a is null)
 				throw new ObjectDisposedException(typeof(ActionRunner).ToString());
 			return a;
 		}
@@ -85,33 +81,27 @@ namespace Open.Threading.Tasks
 			GetAction().Invoke();
 		}
 
-		// ReSharper disable once UnusedMember.Local
-		readonly object _taskLock = new object();
-		CancellableTask _task;
+		CancellableTask? _task;
 		CancellableTask Prepare()
 		{
 			LastStart = DateTime.Now;
 			var task = CancellableTask.Init(GetAction());
 			task
-				.OnFaulted(ex =>
-				{
-				})
-				.OnFullfilled(() =>
-				{
-					LastComplete = DateTime.Now;
-					Interlocked.Increment(ref _count);
-				})
 				.ContinueWith(t =>
 				{
+					if (t.Status == TaskStatus.RanToCompletion)
+					{
+						LastComplete = DateTime.Now;
+						Interlocked.Increment(ref _count);
+					}
 					Interlocked.CompareExchange(ref _task, null, task);
-				});
+				},
+				TaskContinuationOptions.ExecuteSynchronously);
 			return task;
 		}
 
 		public CancellableTask Run()
-		{
-			return Defer(TimeSpan.Zero);
-		}
+			=> Defer(TimeSpan.Zero);
 
 		public CancellableTask Defer(TimeSpan delay, bool clearSchedule = true)
 		{
@@ -120,7 +110,7 @@ namespace Open.Threading.Tasks
 				Cancel(true); // Don't cancel defered if already running.
 			}
 
-			CancellableTask task;
+			CancellableTask? task;
 			if ((task = _task) != null) return task;
 			task = Prepare();
 			if (null == Interlocked.CompareExchange(ref _task, task, null))
@@ -131,9 +121,7 @@ namespace Open.Threading.Tasks
 		}
 
 		public CancellableTask Defer(int millisecondsDelay, bool clearSchedule = true)
-		{
-			return Defer(TimeSpan.FromMilliseconds(millisecondsDelay), clearSchedule);
-		}
+			=> Defer(TimeSpan.FromMilliseconds(millisecondsDelay), clearSchedule);
 
 	}
 }

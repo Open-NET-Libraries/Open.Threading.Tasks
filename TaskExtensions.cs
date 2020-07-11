@@ -10,7 +10,7 @@ namespace Open.Threading.Tasks
 		/// </summary>
 		public static bool IsActive(this Task target)
 		{
-			if (target == null)
+			if (target is null)
 				throw new NullReferenceException();
 
 			switch (target.Status)
@@ -36,14 +36,14 @@ namespace Open.Threading.Tasks
 		/// <param name="target">The task to ensure start.</param>
 		/// <param name="scheduler">Optional scheduler to use.</param>
 		/// <returns>True if start attempt was successful.</returns>
-		public static bool EnsureStarted(this Task target, TaskScheduler scheduler = null)
+		public static bool EnsureStarted(this Task target, TaskScheduler? scheduler = default)
 		{
-			if (target == null) throw new NullReferenceException();
+			if (target is null) throw new NullReferenceException();
 
 			if (target.Status != TaskStatus.Created) return false;
 			try
 			{
-				if (scheduler == null)
+				if (scheduler is null)
 					target.Start();
 				else
 					target.Start(scheduler);

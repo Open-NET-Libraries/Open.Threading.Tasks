@@ -6,30 +6,41 @@ namespace Open.Threading.Tasks
 {
 	public class TimeoutHandler : IDisposable
 	{
-		readonly CancellationTokenSource TokenSource;
-		TimeoutHandler(int delay, Action<int> onComplete)
+		CancellationTokenSource? TokenSource;
+		TimeoutHandler(TimeSpan delay, Action<TimeSpan> onTimeout)
 		{
 			TokenSource = new CancellationTokenSource();
 			Task.Delay(delay, TokenSource.Token).ContinueWith(t =>
 			{
-				if (!t.IsCanceled) onComplete(delay);
+				Interlocked.Exchange(ref TokenSource, null)?.Dispose();
+				if (!t.IsCanceled) onTimeout(delay);
 			});
 		}
 
-		public static TimeoutHandler New(int delay, Action<int> onComplete)
+		public static TimeoutHandler New(TimeSpan delay, Action<TimeSpan> onTimeout)
+			=> new TimeoutHandler(delay, onTimeout);
+
+		public static bool New(TimeSpan delay, out IDisposable timeout, Action<TimeSpan> onTimeout)
 		{
-			return new TimeoutHandler(delay, onComplete);
+			timeout = New(delay, onTimeout);
+			return true;
 		}
 
-		public static bool New(int delay, out IDisposable timeout, Action<int> onComplete)
+		public static TimeoutHandler New(double delay, Action<double> onTimeout)
+			=> New(TimeSpan.FromMilliseconds(delay), ts=> onTimeout(ts.TotalMilliseconds));
+
+		public static bool New(double delay, out IDisposable timeout, Action<double> onTimeout)
 		{
-			timeout = New(delay, onComplete);
+			timeout = New(delay, onTimeout);
 			return true;
 		}
 
 		public void Dispose()
 		{
-			TokenSource.Cancel();
+			var ts = Interlocked.Exchange(ref TokenSource, null);
+			if (ts is null) return;
+			ts.Cancel();
+			ts.Dispose();
 		}
 	}
 }

@@ -9,26 +9,25 @@ namespace Open.Threading.Tasks
 	/// </summary>
 	public class CancellableTask : Task, ICancellable
 	{
-		protected CancellationTokenSource TokenSource;
+		protected CancellationTokenSource? TokenSource;
 
 		public bool Cancel(bool onlyIfNotRunning)
 		{
-			var ts = Interlocked.Exchange(ref TokenSource, null); // Cancel can only be called once.
-
-			if (ts == null || ts.IsCancellationRequested || IsCanceled || IsFaulted || IsCompleted)
+			if (onlyIfNotRunning && Status == TaskStatus.Running || IsCanceled || IsFaulted || IsCompleted)
 				return false;
 
-			var isRunning = Status == TaskStatus.Running;
-			if (!onlyIfNotRunning || !isRunning)
+			var ts = Interlocked.Exchange(ref TokenSource, null); // Cancel can only be called once.
+			if (ts is null) return false;
+			using (ts)
+			{
+				if (ts.IsCancellationRequested) return false;
 				ts.Cancel();
+			}
 
-			return !isRunning;
+			return true;
 		}
 
-		public bool Cancel()
-		{
-			return Cancel(false);
-		}
+		public bool Cancel() => Cancel(false);
 
 		protected static void Blank() { }
 
@@ -38,12 +37,12 @@ namespace Open.Threading.Tasks
 			base.Dispose(disposing);
 		}
 
-		protected CancellableTask(Action action, CancellationToken token)
+		protected CancellableTask(Action? action, CancellationToken token)
 			: base(action ?? Blank, token)
 		{
 		}
 
-		protected CancellableTask(Action action)
+		protected CancellableTask(Action? action)
 			: base(action ?? Blank)
 		{
 		}
@@ -59,7 +58,7 @@ namespace Open.Threading.Tasks
 		}
 
 		// Only allow for static initilialization because this owns the TokenSource.
-		public static CancellableTask Init(Action action = null)
+		public static CancellableTask Init(Action? action = null)
 		{
 			var ts = new CancellationTokenSource();
 			var token = ts.Token;
@@ -69,7 +68,7 @@ namespace Open.Threading.Tasks
 			};
 		}
 
-		public void Start(TimeSpan delay, TaskScheduler scheduler = null)
+		public void Start(TimeSpan delay, TaskScheduler? scheduler = null)
 		{
 			if (delay < TimeSpan.Zero)
 			{
@@ -77,7 +76,7 @@ namespace Open.Threading.Tasks
 			}
 			else if (delay == TimeSpan.Zero)
 			{
-				if (scheduler == null)
+				if (scheduler is null)
 					Start();
 				else
 					Start(scheduler);
@@ -93,7 +92,7 @@ namespace Open.Threading.Tasks
 						Cancel();
 				});
 
-				Delay(delay, TokenSource.Token)
+				Delay(delay, TokenSource!.Token)
 					.OnFullfilled(() =>
 					{
 						Interlocked.Increment(ref runState);
@@ -102,29 +101,23 @@ namespace Open.Threading.Tasks
 			}
 		}
 
-		public void Start(int millisecondsDelay, TaskScheduler scheduler = null)
-		{
-			Start(TimeSpan.FromMilliseconds(millisecondsDelay), scheduler);
-		}
+		public void Start(int millisecondsDelay, TaskScheduler? scheduler = default)
+			=> Start(TimeSpan.FromMilliseconds(millisecondsDelay), scheduler);
 
-		public static CancellableTask StartNew(TimeSpan delay, Action action = null, TaskScheduler scheduler = null)
+		public static CancellableTask StartNew(TimeSpan delay, Action? action = null, TaskScheduler? scheduler = default)
 		{
 			var task = new CancellableTask(action);
 			task.Start(delay, scheduler);
 			return task;
 		}
 
-		public static CancellableTask StartNew(int millisecondsDelay, Action action = null)
-		{
-			return StartNew(TimeSpan.FromMilliseconds(millisecondsDelay), action);
-		}
+		public static CancellableTask StartNew(int millisecondsDelay, Action? action = null)
+			=> StartNew(TimeSpan.FromMilliseconds(millisecondsDelay), action);
 
-		public static CancellableTask StartNew(Action action, TimeSpan? delay = null, TaskScheduler scheduler = null)
-		{
-			return StartNew(delay ?? TimeSpan.Zero, action, scheduler);
-		}
+		public static CancellableTask StartNew(Action action, TimeSpan? delay = null, TaskScheduler? scheduler = default)
+			=> StartNew(delay ?? TimeSpan.Zero, action, scheduler);
 
-		public static CancellableTask StartNew(Action<CancellationToken> action, TimeSpan? delay = null, TaskScheduler scheduler = null)
+		public static CancellableTask StartNew(Action<CancellationToken> action, TimeSpan? delay = null, TaskScheduler? scheduler = default)
 		{
 			var ts = new CancellationTokenSource();
 			var token = ts.Token;

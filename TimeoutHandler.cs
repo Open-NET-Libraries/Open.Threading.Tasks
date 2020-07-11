@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 
 namespace Open.Threading.Tasks
 {
-	public class TimeoutHandler : IDisposable
+	public sealed class TimeoutHandler : IDisposable
 	{
+#pragma warning disable CA2213 // Is disposed properly.
 		CancellationTokenSource? TokenSource;
+#pragma warning restore CA2213
 		TimeoutHandler(TimeSpan delay, Action<TimeSpan> onTimeout)
 		{
 			TokenSource = new CancellationTokenSource();

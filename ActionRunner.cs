@@ -9,7 +9,7 @@ namespace Open.Threading.Tasks
 		public ActionRunner(Action action, TaskScheduler? scheduler = default)
 		{
 			_action = action;
-			_scheduler = scheduler; // No need to hold a refernce to the default, just keep it null.
+			Scheduler = scheduler; // No need to hold a refernce to the default, just keep it null.
 			LastStart = DateTime.MaxValue;
 			LastComplete = DateTime.MaxValue;
 		}
@@ -22,7 +22,7 @@ namespace Open.Threading.Tasks
 
 		Action? _action;
 		// ReSharper disable once NotAccessedField.Global
-		protected TaskScheduler? _scheduler;
+		protected TaskScheduler? Scheduler { get; private set; }
 
 		protected int _count;
 		public int Count => _count;
@@ -60,7 +60,7 @@ namespace Open.Threading.Tasks
 		{
 			Cancel();
 			_action = null;
-			_scheduler = null;
+			Scheduler = null;
 		}
 
 		Action GetAction()
@@ -96,7 +96,9 @@ namespace Open.Threading.Tasks
 					}
 					Interlocked.CompareExchange(ref _task, null, task);
 				},
-				TaskContinuationOptions.ExecuteSynchronously);
+				CancellationToken.None,
+				TaskContinuationOptions.ExecuteSynchronously,
+				Scheduler);
 			return task;
 		}
 

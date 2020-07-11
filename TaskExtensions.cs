@@ -10,8 +10,7 @@ namespace Open.Threading.Tasks
 		/// </summary>
 		public static bool IsActive(this Task target)
 		{
-			if (target is null)
-				throw new NullReferenceException();
+			if (target is null) throw new ArgumentNullException(nameof(target));
 
 			switch (target.Status)
 			{
@@ -38,8 +37,7 @@ namespace Open.Threading.Tasks
 		/// <returns>True if start attempt was successful.</returns>
 		public static bool EnsureStarted(this Task target, TaskScheduler? scheduler = default)
 		{
-			if (target is null) throw new NullReferenceException();
-
+			if (target is null) throw new ArgumentNullException(nameof(target));
 			if (target.Status != TaskStatus.Created) return false;
 			try
 			{
@@ -70,6 +68,7 @@ namespace Open.Threading.Tasks
 		public static TTask OnFullfilled<TTask>(this TTask target, Action action)
 			where TTask : Task
 		{
+			if (target is null) throw new ArgumentNullException(nameof(target));
 			target.ContinueWith(task =>
 			{
 				if (task.Status == TaskStatus.RanToCompletion) action();
@@ -87,6 +86,7 @@ namespace Open.Threading.Tasks
 		/// <returns>The target object.  Allows for method chaining.</returns>
 		public static Task<T> OnFullfilled<T>(this Task<T> target, Action<T> action)
 		{
+			if (target is null) throw new ArgumentNullException(nameof(target));
 			target.ContinueWith(task =>
 			{
 				if (task.Status == TaskStatus.RanToCompletion) action(task.Result);
@@ -106,6 +106,7 @@ namespace Open.Threading.Tasks
 		public static TTask OnFullfilled<TTask, T>(this TTask target, Func<T> action)
 			where TTask : Task
 		{
+			if (target is null) throw new ArgumentNullException(nameof(target));
 			target.ContinueWith(task =>
 			{
 				if (task.Status == TaskStatus.RanToCompletion) action();
@@ -124,6 +125,7 @@ namespace Open.Threading.Tasks
 		public static TTask OnFaulted<TTask>(this TTask target, Action<Exception> action)
 			where TTask : Task
 		{
+			if (target is null) throw new ArgumentNullException(nameof(target));
 			target.ContinueWith(task =>
 			{
 				if (task.IsFaulted) action(task.Exception);
@@ -143,6 +145,7 @@ namespace Open.Threading.Tasks
 		public static TTask OnCancelled<TTask>(this TTask target, Action action)
 			where TTask : Task
 		{
+			if (target is null) throw new ArgumentNullException(nameof(target));
 			target.ContinueWith(task =>
 			{
 				if (!task.IsCanceled) action();
@@ -162,6 +165,7 @@ namespace Open.Threading.Tasks
 		public static TTask OnCancelled<TTask, T>(this TTask target, Func<T> action)
 			where TTask : Task
 		{
+			if (target is null) throw new ArgumentNullException(nameof(target));
 			target.ContinueWith(task =>
 			{
 				if (!task.IsCanceled) action();

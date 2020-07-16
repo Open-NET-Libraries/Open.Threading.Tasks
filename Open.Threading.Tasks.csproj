@@ -1,27 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Authors>electricessence</Authors>
-    <Description>A set of utilities and extensions for working with Tasks.
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Authors>electricessence</Authors>
+		<Description>A set of utilities and extensions for working with Tasks.
 
-Part of the "Open" set of libraries.</Description>
-    <Copyright>https://github.com/Open-NET-Libraries/Open.Threading.Tasks/blob/master/LISCENSE.md</Copyright>
-    <PackageProjectUrl>https://github.com/Open-NET-Libraries/Open.Threading.Tasks/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Open-NET-Libraries/Open.Threading.Tasks/</RepositoryUrl>
+			Part of the "Open" set of libraries.</Description>
+		<Copyright>© electricessence (Oren F.) All rights reserved.</Copyright>
+		<PackageProjectUrl>https://github.com/Open-NET-Libraries/Open.Threading.Tasks/</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Open-NET-Libraries/Open.Threading.Tasks/</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
-    <PackageTags>dotnet, dotnet-core, dotnetcore, cs, extensions, actionrunner, cancellable, cancellabletask, progress, task-extensions</PackageTags>
-    <Version>1.2.0</Version>
-    <PackageReleaseNotes></PackageReleaseNotes>
-    <PackageIcon>logo.png</PackageIcon>
+		<PackageTags>dotnet, dotnet-core, dotnetcore, cs, extensions, actionrunner, cancellable, cancellabletask, progress, task-extensions</PackageTags>
+		<Version>1.2.1</Version>
+		<PackageReleaseNotes></PackageReleaseNotes>
+		<PackageIcon>logo.png</PackageIcon>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>		
-  </PropertyGroup>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
@@ -34,16 +34,16 @@ Part of the "Open" set of libraries.</Description>
 		</PackageReference>
 	</ItemGroup>
 
-  <ItemGroup>
-    <None Remove=".editorconfig" />
-    <None Remove=".git" />
-    <None Remove=".gitignore" />
-    <None Remove="LICENSE" />
-    <AdditionalFiles Include=".editorconfig" />
-    <None Include="logo.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove=".editorconfig" />
+		<None Remove=".git" />
+		<None Remove=".gitignore" />
+		<None Remove="LICENSE" />
+		<AdditionalFiles Include=".editorconfig" />
+		<None Include="logo.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>

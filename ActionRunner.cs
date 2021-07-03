@@ -15,10 +15,10 @@ namespace Open.Threading.Tasks
 		}
 
 		public static ActionRunner Create(Action action, TaskScheduler? scheduler = default)
-			=> new ActionRunner(action, scheduler);
+			=> new(action, scheduler);
 
 		public static ActionRunner Create<T>(Func<T> action, TaskScheduler? scheduler = default)
-			=> new ActionRunner(() => { action(); }, scheduler);
+			=> new(() => { action(); }, scheduler);
 
 		Action? _action;
 		// ReSharper disable once NotAccessedField.Global

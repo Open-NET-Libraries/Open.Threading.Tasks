@@ -6,21 +6,20 @@ namespace Open.Threading.Tasks
 {
 	public sealed class TimeoutHandler : IDisposable
 	{
-#pragma warning disable CA2213 // Is disposed properly.
 		CancellationTokenSource? TokenSource;
-#pragma warning restore CA2213
+
 		TimeoutHandler(TimeSpan delay, Action<TimeSpan> onTimeout)
 		{
 			TokenSource = new CancellationTokenSource();
 			Task.Delay(delay, TokenSource.Token).ContinueWith(t =>
 			{
-				Interlocked.Exchange(ref TokenSource, null)?.Dispose();
+				Interlocked.Exchange(ref TokenSource, null!)?.Dispose();
 				if (!t.IsCanceled) onTimeout(delay);
 			});
 		}
 
 		public static TimeoutHandler New(TimeSpan delay, Action<TimeSpan> onTimeout)
-			=> new TimeoutHandler(delay, onTimeout);
+			=> new(delay, onTimeout);
 
 		public static bool New(TimeSpan delay, out IDisposable timeout, Action<TimeSpan> onTimeout)
 		{

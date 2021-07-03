@@ -12,21 +12,15 @@ namespace Open.Threading.Tasks
 		{
 			if (target is null) throw new ArgumentNullException(nameof(target));
 
-			switch (target.Status)
+			return target.Status switch
 			{
-				case TaskStatus.Created:
-				case TaskStatus.Running:
-				case TaskStatus.WaitingForActivation:
-				case TaskStatus.WaitingForChildrenToComplete:
-				case TaskStatus.WaitingToRun:
-					return true;
-					//case TaskStatus.Canceled:
-					//case TaskStatus.Faulted:
-					//case TaskStatus.RanToCompletion:
-					//	return false;
-			}
-
-			return false;
+				TaskStatus.Created or
+				TaskStatus.Running or
+				TaskStatus.WaitingForActivation or
+				TaskStatus.WaitingForChildrenToComplete or
+				TaskStatus.WaitingToRun => true,
+				_ => false,
+			};
 		}
 
 		/// <summary>

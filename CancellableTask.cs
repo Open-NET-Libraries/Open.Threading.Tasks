@@ -9,9 +9,7 @@ namespace Open.Threading.Tasks
 	/// </summary>
 	public class CancellableTask : Task, ICancellable
 	{
-#pragma warning disable CA2213 // Is disposed in Cancel method.
 		CancellationTokenSource? TokenSource;
-#pragma warning restore CA2213
 
 		public bool Cancel(bool onlyIfNotRunning)
 		{

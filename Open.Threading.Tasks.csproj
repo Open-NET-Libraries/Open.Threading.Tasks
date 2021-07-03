@@ -15,7 +15,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>dotnet, dotnet-core, dotnetcore, cs, extensions, actionrunner, cancellable, cancellabletask, progress, task-extensions</PackageTags>
-		<Version>1.2.1</Version>
+		<Version>1.2.2</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageIcon>logo.png</PackageIcon>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>

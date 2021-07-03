@@ -98,7 +98,7 @@ namespace Open.Threading.Tasks
 				},
 				CancellationToken.None,
 				TaskContinuationOptions.ExecuteSynchronously,
-				Scheduler);
+				Scheduler ?? TaskScheduler.Default);
 			return task;
 		}
 

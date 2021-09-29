@@ -101,8 +101,7 @@ namespace Open.Threading.Tasks
 			}
 		}
 
-		public void Start(int millisecondsDelay, TaskScheduler? scheduler = default)
-			=> Start(TimeSpan.FromMilliseconds(millisecondsDelay), scheduler);
+		public void Start(int millisecondsDelay, TaskScheduler? scheduler = default) => Start(TimeSpan.FromMilliseconds(millisecondsDelay), scheduler);
 
 		public static CancellableTask StartNew(TimeSpan delay, Action? action = null, TaskScheduler? scheduler = default)
 		{
@@ -111,11 +110,9 @@ namespace Open.Threading.Tasks
 			return task;
 		}
 
-		public static CancellableTask StartNew(int millisecondsDelay, Action? action = null)
-			=> StartNew(TimeSpan.FromMilliseconds(millisecondsDelay), action);
+		public static CancellableTask StartNew(int millisecondsDelay, Action? action = null) => StartNew(TimeSpan.FromMilliseconds(millisecondsDelay), action);
 
-		public static CancellableTask StartNew(Action action, TimeSpan? delay = null, TaskScheduler? scheduler = default)
-			=> StartNew(delay ?? TimeSpan.Zero, action, scheduler);
+		public static CancellableTask StartNew(Action action, TimeSpan? delay = null, TaskScheduler? scheduler = default) => StartNew(delay ?? TimeSpan.Zero, action, scheduler);
 
 		public static CancellableTask StartNew(Action<CancellationToken> action, TimeSpan? delay = null, TaskScheduler? scheduler = default)
 		{

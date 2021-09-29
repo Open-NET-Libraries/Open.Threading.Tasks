@@ -14,11 +14,9 @@ namespace Open.Threading.Tasks
 			LastComplete = DateTime.MaxValue;
 		}
 
-		public static ActionRunner Create(Action action, TaskScheduler? scheduler = default)
-			=> new(action, scheduler);
+		public static ActionRunner Create(Action action, TaskScheduler? scheduler = default) => new(action, scheduler);
 
-		public static ActionRunner Create<T>(Func<T> action, TaskScheduler? scheduler = default)
-			=> new(() => { action(); }, scheduler);
+		public static ActionRunner Create<T>(Func<T> action, TaskScheduler? scheduler = default) => new(() => { action(); }, scheduler);
 
 		Action? _action;
 		// ReSharper disable once NotAccessedField.Global
@@ -51,10 +49,7 @@ namespace Open.Threading.Tasks
 				&& t.Cancel(onlyIfNotRunning);
 		}
 
-		public bool Cancel()
-		{
-			return Cancel(false);
-		}
+		public bool Cancel() => Cancel(false);
 
 		public void Dispose()
 		{
@@ -76,10 +71,7 @@ namespace Open.Threading.Tasks
 		/// <summary>
 		/// Indiscriminately invokes the action.
 		/// </summary>
-		public void RunSynchronously()
-		{
-			GetAction().Invoke();
-		}
+		public void RunSynchronously() => GetAction().Invoke();
 
 		CancellableTask? _task;
 		CancellableTask Prepare()
@@ -102,8 +94,7 @@ namespace Open.Threading.Tasks
 			return task;
 		}
 
-		public CancellableTask Run()
-			=> Defer(TimeSpan.Zero);
+		public CancellableTask Run() => Defer(TimeSpan.Zero);
 
 		public CancellableTask Defer(TimeSpan delay, bool clearSchedule = true)
 		{
@@ -122,8 +113,6 @@ namespace Open.Threading.Tasks
 			return task;
 		}
 
-		public CancellableTask Defer(int millisecondsDelay, bool clearSchedule = true)
-			=> Defer(TimeSpan.FromMilliseconds(millisecondsDelay), clearSchedule);
-
+		public CancellableTask Defer(int millisecondsDelay, bool clearSchedule = true) => Defer(TimeSpan.FromMilliseconds(millisecondsDelay), clearSchedule);
 	}
 }

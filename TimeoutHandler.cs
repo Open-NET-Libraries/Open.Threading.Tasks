@@ -18,8 +18,7 @@ namespace Open.Threading.Tasks
 			});
 		}
 
-		public static TimeoutHandler New(TimeSpan delay, Action<TimeSpan> onTimeout)
-			=> new(delay, onTimeout);
+		public static TimeoutHandler New(TimeSpan delay, Action<TimeSpan> onTimeout) => new(delay, onTimeout);
 
 		public static bool New(TimeSpan delay, out IDisposable timeout, Action<TimeSpan> onTimeout)
 		{
@@ -27,8 +26,7 @@ namespace Open.Threading.Tasks
 			return true;
 		}
 
-		public static TimeoutHandler New(double delay, Action<double> onTimeout)
-			=> New(TimeSpan.FromMilliseconds(delay), ts => onTimeout(ts.TotalMilliseconds));
+		public static TimeoutHandler New(double delay, Action<double> onTimeout) => New(TimeSpan.FromMilliseconds(delay), ts => onTimeout(ts.TotalMilliseconds));
 
 		public static bool New(double delay, out IDisposable timeout, Action<double> onTimeout)
 		{

@@ -6,9 +6,11 @@
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>electricessence</Authors>
-		<Description>A set of utilities and extensions for working with Tasks.
+		<Description>
+			A set of utilities and extensions for working with Tasks.
 
-			Part of the "Open" set of libraries.</Description>
+			Part of the "Open" set of libraries.
+		</Description>
 		<Copyright>© electricessence (Oren F.) All rights reserved.</Copyright>
 		<PackageProjectUrl>https://github.com/Open-NET-Libraries/Open.Threading.Tasks/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Open-NET-Libraries/Open.Threading.Tasks/</RepositoryUrl>
@@ -21,6 +23,8 @@
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -28,11 +32,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove=".editorconfig" />
 		<None Remove=".git" />
 		<None Remove=".gitignore" />
 		<None Remove="LICENSE" />
-		<AdditionalFiles Include=".editorconfig" />
 		<None Include="logo.png">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>

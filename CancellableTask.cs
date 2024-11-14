@@ -13,10 +13,13 @@ public class CancellableTask : Task, ICancellable
 
 	public bool Cancel(bool onlyIfNotRunning)
 	{
-		if (onlyIfNotRunning && Status == TaskStatus.Running || IsCanceled || IsFaulted || IsCompleted)
-			return false;
+		if (IsCanceled || IsFaulted || IsCompleted)
+            return false;
 
-		var ts = Interlocked.Exchange(ref TokenSource, null); // Cancel can only be called once.
+        if (onlyIfNotRunning && Status == TaskStatus.Running)
+            return false;
+
+        var ts = Interlocked.Exchange(ref TokenSource, null); // Cancel can only be called once.
 		if (ts is null) return false;
 		using (ts)
 		{

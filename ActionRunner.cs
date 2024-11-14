@@ -4,43 +4,35 @@ using System.Threading.Tasks;
 
 namespace Open.Threading.Tasks;
 
-public class ActionRunner : ICancellable
+public class ActionRunner(Action action, TaskScheduler? scheduler = default) : ICancellable
 {
-	public ActionRunner(Action action, TaskScheduler? scheduler = default)
-	{
-		_action = action;
-		Scheduler = scheduler; // No need to hold a refernce to the default, just keep it null.
-		LastStart = DateTime.MaxValue;
-		LastComplete = DateTime.MaxValue;
-	}
-
-	public static ActionRunner Create(Action action, TaskScheduler? scheduler = default) => new(action, scheduler);
+    public static ActionRunner Create(Action action, TaskScheduler? scheduler = default) => new(action, scheduler);
 
 	public static ActionRunner Create<T>(Func<T> action, TaskScheduler? scheduler = default)
 		=> new(() => action(), scheduler);
 
-	Action? _action;
-	// ReSharper disable once NotAccessedField.Global
-	protected TaskScheduler? Scheduler { get; private set; }
+	Action? _action = action;
+    // ReSharper disable once NotAccessedField.Global
+    protected TaskScheduler? Scheduler { get; private set; } = scheduler; // No need to hold a refernce to the default, just keep it null.
 
-	protected int _count;
+    protected int _count;
 	public int Count => _count;
 
-	public DateTime LastStart
-	{
-		get;
-		protected set;
-	}
+    public DateTime LastStart
+    {
+        get;
+        protected set;
+    } = DateTime.MaxValue;
 
-	public bool HasBeenRun => LastStart < DateTime.Now;
+    public bool HasBeenRun => LastStart < DateTime.Now;
 
-	public DateTime LastComplete
-	{
-		get;
-		protected set;
-	}
+    public DateTime LastComplete
+    {
+        get;
+        protected set;
+    } = DateTime.MaxValue;
 
-	public bool HasCompleted => LastComplete < DateTime.Now;
+    public bool HasCompleted => LastComplete < DateTime.Now;
 
 	public bool Cancel(bool onlyIfNotRunning)
 	{

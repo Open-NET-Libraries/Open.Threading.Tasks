@@ -6,14 +6,14 @@ namespace Open.Threading.Tasks;
 
 public sealed class TimeoutHandler : IDisposable
 {
-	CancellationTokenSource? TokenSource;
+	CancellationTokenSource? _tokenSource;
 
 	TimeoutHandler(TimeSpan delay, Action<TimeSpan> onTimeout)
 	{
-		TokenSource = new CancellationTokenSource();
-		Task.Delay(delay, TokenSource.Token).ContinueWith(t =>
+		_tokenSource = new CancellationTokenSource();
+		Task.Delay(delay, _tokenSource.Token).ContinueWith(t =>
 		{
-			Interlocked.Exchange(ref TokenSource, null!)?.Dispose();
+			Interlocked.Exchange(ref _tokenSource, null!)?.Dispose();
 			if (!t.IsCanceled) onTimeout(delay);
 		});
 	}
@@ -36,7 +36,7 @@ public sealed class TimeoutHandler : IDisposable
 
 	public void Dispose()
 	{
-		var ts = Interlocked.Exchange(ref TokenSource, null);
+		var ts = Interlocked.Exchange(ref _tokenSource, null);
 		if (ts is null) return;
 		ts.Cancel();
 		ts.Dispose();

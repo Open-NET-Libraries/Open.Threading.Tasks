@@ -9,7 +9,7 @@ namespace Open.Threading.Tasks;
 /// </summary>
 public class CancellableTask : Task, ICancellable
 {
-	CancellationTokenSource? TokenSource;
+	CancellationTokenSource? _tokenSource;
 
 	public bool Cancel(bool onlyIfNotRunning)
 	{
@@ -19,7 +19,7 @@ public class CancellableTask : Task, ICancellable
         if (onlyIfNotRunning && Status == TaskStatus.Running)
             return false;
 
-        var ts = Interlocked.Exchange(ref TokenSource, null); // Cancel can only be called once.
+        var ts = Interlocked.Exchange(ref _tokenSource, null); // Cancel can only be called once.
 		if (ts is null) return false;
 		using (ts)
 		{
@@ -67,7 +67,7 @@ public class CancellableTask : Task, ICancellable
 		var token = ts.Token;
 		return new CancellableTask(action, token)
 		{
-			TokenSource = ts // Could potentially call cancel before run actually happens.
+			_tokenSource = ts // Could potentially call cancel before run actually happens.
 		};
 	}
 
@@ -95,7 +95,7 @@ public class CancellableTask : Task, ICancellable
 					Cancel();
 			});
 
-			Delay(delay, TokenSource!.Token)
+			Delay(delay, _tokenSource!.Token)
 				.OnFullfilled(() =>
 				{
 					Interlocked.Increment(ref runState);
@@ -123,7 +123,7 @@ public class CancellableTask : Task, ICancellable
 		var token = ts.Token;
 		var task = new CancellableTask(() => action(token), token)
 		{
-			TokenSource = ts
+			_tokenSource = ts
 		};
 		task.Start(delay ?? TimeSpan.Zero, scheduler);
 		return task;
